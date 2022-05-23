@@ -9,4 +9,8 @@
 [Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
+<<<<<<< HEAD
 !/[Aa]ssets/**/*.meta
+=======
+!/[Aa]ssets/**/*.meta
+>>>>>>> a67ba859fb110b62ce5b01c177203144ae6ce391
