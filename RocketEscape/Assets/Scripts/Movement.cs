@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
     [SerializeField] AudioClip mainThruster;
     [SerializeField] ParticleSystem LTPS;
     [SerializeField] ParticleSystem RTPS;
-    [SerializeField] ParticleSystem MTPS;
+    [SerializeField] ParticleSystem MTPS;        
 
 
     Rigidbody rocketBody;
@@ -31,15 +31,29 @@ public class Movement : MonoBehaviour
         ProcessAlignVert();
     }
 
+
+    void ProcessThrust()
+    {
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button0))
+        {
+            ApplyThrust();
+        }
+        else
+        {
+            audioSource.Stop();
+            MTPS.Stop();
+        }
+    }
+
     void ProcessRotate()
     {   
         if (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal")< 0)
         {
-            Rotate(rotationThrust);
+            RotateLeft();
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 0)
         {
-            Rotate(-rotationThrust);
+            RotateRight();
         }
         else
         {
@@ -48,48 +62,51 @@ public class Movement : MonoBehaviour
         }
     }
 
-    void Rotate(float rotationThisFrame)
-    {
-        rocketBody.freezeRotation = true; //freezng rotation so we can manually rotate
-        ParticleSystem thruster;
-        if (rotationThisFrame > 0) thruster = RTPS;
-        else thruster = LTPS;
-        thruster.Play();
-        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);        
-        rocketBody.freezeRotation = false;
-
-        //thruster.Stop();
-    }
-
-    void ProcessThrust()
-    {
-        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick1Button0))
-        {
-            if (!audioSource.isPlaying)
-            {                
-                audioSource.PlayOneShot(mainThruster);                
-            }
-
-            MTPS.Play();
-
-            rocketBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);            
-        }
-        else
-        {
-            if (audioSource.isPlaying)
-            {
-                audioSource.Stop();
-                MTPS.Stop();
-            }
-        }
-
-    }
-
     void ProcessAlignVert()
     {
-        if(Input.GetKey(KeyCode.Joystick1Button1))
+        if (Input.GetKeyDown(KeyCode.Joystick1Button1))
         {
             transform.rotation = Quaternion.identity;
         }
     }
+
+    void ApplyThrust()
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(mainThruster);
+        }
+
+        if (!MTPS.isPlaying)
+        {
+            MTPS.Play();
+        }
+
+        rocketBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+    }
+
+    void RotateRight()
+    {
+        Rotate(-rotationThrust);
+        if (!LTPS.isPlaying)
+        {
+            LTPS.Play();
+        }
+    }
+
+    void RotateLeft()
+    {
+        Rotate(rotationThrust);
+        if (!RTPS.isPlaying)
+        {
+            RTPS.Play();
+        }
+    }
+
+    void Rotate(float rotationThisFrame)
+    {
+        rocketBody.freezeRotation = true; //freezng rotation so we can manually rotate
+        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);        
+        rocketBody.freezeRotation = false;        
+    }    
 }

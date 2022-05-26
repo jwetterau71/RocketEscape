@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CollisionHandler : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] AudioClip success;
     [SerializeField] ParticleSystem successParticles;
     [SerializeField] ParticleSystem crashParticles;
+    [SerializeField] bool IsCollisionsDisabled;    
 
     AudioSource audioSource;
     bool isTransitioning = false;
@@ -20,7 +22,28 @@ public class CollisionHandler : MonoBehaviour
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();        
+        audioSource = GetComponent<AudioSource>();
+        //canvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
+    }
+
+    void Update()
+    {
+        ProcessDeveloperOptions();
+    }
+
+    void ProcessDeveloperOptions()
+    {
+        if (Input.GetKeyDown(KeyCode.L) || (Input.GetKey(KeyCode.JoystickButton4) && Input.GetKeyDown(KeyCode.JoystickButton5)))
+        {            
+            InvokeLevelChange(GetNextLevel(), 0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C) || (Input.GetKey(KeyCode.JoystickButton5) && Input.GetKeyDown(KeyCode.JoystickButton4)))
+        {            
+            IsCollisionsDisabled = !IsCollisionsDisabled;            
+        }
+
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -36,7 +59,10 @@ public class CollisionHandler : MonoBehaviour
                 StartSuccessSequence();
                 break;
             default:
-                StartCrashSequence();
+                if (!IsCollisionsDisabled)
+                {
+                    StartCrashSequence();
+                }
                 break;
         }        
         isTransitioning = false;
@@ -104,6 +130,6 @@ public class CollisionHandler : MonoBehaviour
             successParticles.Play();
             GetComponent<Movement>().enabled = false;
             InvokeLevelChange(GetNextLevel(), LevelLoadDelay);
-        }
+        }        
     }
 }
