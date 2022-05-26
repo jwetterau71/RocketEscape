@@ -7,15 +7,20 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] float KillLoadDelay = 2f;
     [SerializeField] AudioClip collision;
     [SerializeField] AudioClip success;
+    [SerializeField] ParticleSystem successParticles;
+    [SerializeField] ParticleSystem crashParticles;
 
     AudioSource audioSource;
     bool isTransitioning = false;
+    bool hasCrashed;
+    bool hasLanded;
 
     int nextSceneIndex;
+    
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();        
     }
 
     void OnCollisionEnter(Collision collision)
@@ -78,19 +83,27 @@ public class CollisionHandler : MonoBehaviour
 
     void StartCrashSequence()
     {
-        isTransitioning = true;
-        //TODO: Add particle effects
-        audioSource.PlayOneShot(collision);        
-        GetComponent<Movement>().enabled = false;
-        InvokeLevelChange(SceneManager.GetActiveScene().buildIndex, KillLoadDelay);
+        if (!hasCrashed && !hasLanded) 
+        {
+            hasCrashed = true;
+            isTransitioning = true;
+            audioSource.PlayOneShot(collision);
+            crashParticles.Play();
+            GetComponent<Movement>().enabled = false;
+            InvokeLevelChange(SceneManager.GetActiveScene().buildIndex, KillLoadDelay);
+        }
     }
 
     void StartSuccessSequence()
     {
-        isTransitioning = true;
-        //TODO: Add particle effects
-        audioSource.PlayOneShot(success);
-        GetComponent<Movement>().enabled = false;
-        InvokeLevelChange(GetNextLevel(), LevelLoadDelay);
+        if (!hasLanded && !hasCrashed)
+        {
+            hasLanded = true;
+            isTransitioning = true;
+            audioSource.PlayOneShot(success);
+            successParticles.Play();
+            GetComponent<Movement>().enabled = false;
+            InvokeLevelChange(GetNextLevel(), LevelLoadDelay);
+        }
     }
 }

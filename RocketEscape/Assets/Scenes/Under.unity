@@ -507,11 +507,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 414070542331238529, guid: 182f120335637ee49b2472fee120c155, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.86
+      value: -26.81
       objectReference: {fileID: 0}
     - target: {fileID: 414070542331238529, guid: 182f120335637ee49b2472fee120c155, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8
+      value: 3.76
       objectReference: {fileID: 0}
     - target: {fileID: 414070542331238529, guid: 182f120335637ee49b2472fee120c155, type: 3}
       propertyPath: m_LocalPosition.z
@@ -548,10 +548,6 @@ PrefabInstance:
     - target: {fileID: 414070542331238539, guid: 182f120335637ee49b2472fee120c155, type: 3}
       propertyPath: m_Name
       value: Rocket
-      objectReference: {fileID: 0}
-    - target: {fileID: 414070542331238541, guid: 182f120335637ee49b2472fee120c155, type: 3}
-      propertyPath: m_Drag
-      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 182f120335637ee49b2472fee120c155, type: 3}

@@ -7,8 +7,12 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] float mainThrust = 1500f;
     [SerializeField] float rotationThrust = 500f;
-    [SerializeField] AudioClip mainThruster;    
-    
+    [SerializeField] AudioClip mainThruster;
+    [SerializeField] ParticleSystem LTPS;
+    [SerializeField] ParticleSystem RTPS;
+    [SerializeField] ParticleSystem MTPS;
+
+
     Rigidbody rocketBody;
     AudioSource audioSource;  
 
@@ -37,13 +41,24 @@ public class Movement : MonoBehaviour
         {
             Rotate(-rotationThrust);
         }
+        else
+        {
+            LTPS.Stop();
+            RTPS.Stop();
+        }
     }
 
     void Rotate(float rotationThisFrame)
     {
         rocketBody.freezeRotation = true; //freezng rotation so we can manually rotate
-        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
+        ParticleSystem thruster;
+        if (rotationThisFrame > 0) thruster = RTPS;
+        else thruster = LTPS;
+        thruster.Play();
+        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);        
         rocketBody.freezeRotation = false;
+
+        //thruster.Stop();
     }
 
     void ProcessThrust()
@@ -52,8 +67,11 @@ public class Movement : MonoBehaviour
         {
             if (!audioSource.isPlaying)
             {                
-                audioSource.PlayOneShot(mainThruster);
+                audioSource.PlayOneShot(mainThruster);                
             }
+
+            MTPS.Play();
+
             rocketBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);            
         }
         else
@@ -61,6 +79,7 @@ public class Movement : MonoBehaviour
             if (audioSource.isPlaying)
             {
                 audioSource.Stop();
+                MTPS.Stop();
             }
         }
 
