@@ -42,8 +42,6 @@ public class CollisionHandler : MonoBehaviour
         {            
             IsCollisionsDisabled = !IsCollisionsDisabled;            
         }
-
-
     }
 
     void OnCollisionEnter(Collision collision)
