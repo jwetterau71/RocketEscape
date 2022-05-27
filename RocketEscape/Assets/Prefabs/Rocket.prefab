@@ -208,6 +208,7 @@ MonoBehaviour:
   success: {fileID: 8300000, guid: cd0c562b6f758cb48854878f87659f6f, type: 3}
   successParticles: {fileID: 3139851631848085355}
   crashParticles: {fileID: 6571885765585904606}
+  IsCollisionsDisabled: 0
 --- !u!65 &548551937875475089
 BoxCollider:
   m_ObjectHideFlags: 0
